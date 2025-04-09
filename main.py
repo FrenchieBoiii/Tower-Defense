@@ -12,11 +12,11 @@ def a_star(grid, start, goal):
     rows, cols = len(grid), len(grid[0])
     
     # Cost from start to the current node
-    g_costs = [[float('inf')] * cols for _ in range(rows)]
+    g_costs = [[float('inf')] * cols for i in range(rows)]
     g_costs[start[0]][start[1]] = 0
 
     # Estimated cost from current node to goal
-    f_costs = [[float('inf')] * cols for _ in range(rows)]
+    f_costs = [[float('inf')] * cols for i in range(rows)]
     f_costs[start[0]][start[1]] = manhattan_distance(start, goal)
 
     # Priority queue to explore nodes (min-heap)
@@ -25,47 +25,49 @@ def a_star(grid, start, goal):
 
     # Track the path
     came_from = {}
-
-    while open_list:
+    path = []
+    continuer = True
+    
+    while open_list and continuer:
         # Get the node with the lowest f-cost
         current_f_cost, current = heapq.heappop(open_list)
         x, y = current
 
         # If we reach the goal, reconstruct the path
         if current == goal:
-            path = []
             while current in came_from:
                 path.append(current)
                 current = came_from[current]
             path.append(start)
             path.reverse()  # Reverse to get path from start to goal
-            return path
+            continuer = False
         
         # Explore neighbors
-        for dx, dy in DIRECTIONS:
-            nx, ny = x + dx, y + dy
-
-            # Ensure the neighbor is within the grid bounds
-            if 0 <= nx < rows and 0 <= ny < cols:
-                # Mountain tiles are impassable
-                if grid[nx][ny] == float('inf'):
-                    continue
-
-                # Calculate the cost to move to this neighbor
-                move_cost = grid[nx][ny]
-                tentative_g_cost = g_costs[x][y] + move_cost
-
-                # If this path is better, update costs and add to open list
-                if tentative_g_cost < g_costs[nx][ny]:
-                    g_costs[nx][ny] = tentative_g_cost
-                    f_cost = tentative_g_cost + manhattan_distance((nx, ny), goal)
-                    f_costs[nx][ny] = f_cost
-
-                    heapq.heappush(open_list, (f_cost, (nx, ny)))
-                    came_from[(nx, ny)] = (x, y)
+        
+        if continuer:
+            for dx, dy in DIRECTIONS:
+                nx, ny = x + dx, y + dy
     
-    # If no path was found
-    return None
+                # Ensure the neighbor is within the grid bounds
+                if 0 <= nx < rows and 0 <= ny < cols:
+                    # Mountain tiles are impassable
+                    if grid[nx][ny] == float('inf'):
+                        continue
+    
+                    # Calculate the cost to move to this neighbor
+                    move_cost = grid[nx][ny]
+                    tentative_g_cost = g_costs[x][y] + move_cost
+    
+                    # If this path is better, update costs and add to open list
+                    if tentative_g_cost < g_costs[nx][ny]:
+                        g_costs[nx][ny] = tentative_g_cost
+                        f_cost = tentative_g_cost + manhattan_distance((nx, ny), goal)
+                        f_costs[nx][ny] = f_cost
+    
+                        heapq.heappush(open_list, (f_cost, (nx, ny)))
+                        came_from[(nx, ny)] = (x, y)
+    
+    return path
 
 # Example map: 50x70 grid with random terrain values (mountains have infinite cost)
 def create_map():
@@ -118,8 +120,9 @@ if __name__ == "__main__":
     path = a_star(grid, start, goal)
 
     # Visualize the grid with the path
-    if path:
+    if path != []:
         print("Path found:")
         visualize_grid(grid, path)
     else:
         print("No path found.")
+
