@@ -32,16 +32,32 @@ class Map():
                     i +=1
                     fill = cell.fill
                     couleur = fill.fgColor.rgb
+                    if couleur == 'FFFFFFFF' or couleur == '00000000':
+                        color_row.append('Chemin')
                     
-                    if couleur != 'FFC00000':
-                        # Récupérer la couleur de fond de la cellule
+                    elif couleur == 'FFC00000':
+                        i = len(row)  
+                    
+                    elif couleur == 'FF4D4D4D':
+                        color_row.append('Montagne')
                         
-                        if fill and fill.fgColor and couleur:
-                            color_row.append(couleur)
-                        else:
-                            color_row.append(None)  # Aucune couleur
+                    elif couleur == 'FF0066FF':
+                        color_row.append('Riviere')
+                        
+                    elif couleur == 'FF006600':
+                        color_row.append('Foret')
+                    
+                    elif couleur == 'FF996633':
+                        color_row.append('Pont')
+                        
+                    elif couleur == 'FFD60093':
+                        color_row.append('Depart')
+                        
+                    elif couleur == 'FFFF3300':
+                        color_row.append('Arrivee')
                     else :
-                        i = len(row)
+                        color_row.append(couleur)
+                        
                 color_matrix.append(color_row)
                             
         wb.close()
