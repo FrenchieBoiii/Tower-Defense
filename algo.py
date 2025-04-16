@@ -1,4 +1,6 @@
 import heapq
+import main
+
 
 # Direction vectors for moving up, down, left, right (no diagonal movement)
 DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -68,3 +70,44 @@ def a_star(grid, start, goal):
                         came_from[(nx, ny)] = (x, y)
     
     return path
+
+
+def chemin_bloque(grid_a_tester):
+    
+    bloque = True
+    start = [0,0]
+    goal = [main.rows-1,main.cols-1]
+    path = a_star(grid_a_tester, start, goal)
+
+    if path != []:
+        bloque = False
+    return bloque
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
