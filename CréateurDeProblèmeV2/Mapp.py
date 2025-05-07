@@ -101,8 +101,3 @@ class Mapp():
     def ajouter_tourelle(self,coor,nom):
         liste = self.mapp[coor[0]]
         liste[coor[1]] = nom
-
-coucou = Mapp("Map.xlsx","Wave.xlsx","Feuil3")
-print(coucou.mapp)
-coucou.ajouter_tourelle([0,0],'tourelle')
-print(coucou.mapp)
