@@ -1,13 +1,14 @@
+
 import tkinter as tk 
 from PIL import Image, ImageTk
 from tkinter import scrolledtext
-
+#from ennemie import ennemie
 
 class VuePresentation(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("smooth attaque")
-        self.geometry("800x600")
+        self.geometry("700x300")
         self.resizable(False, False)
 
         self.creer_widgets()
@@ -30,9 +31,9 @@ class VuePresentation(tk.Tk):
         fenetre_jeu = VuePrincipale(self, 1000, 700)
         fenetre_jeu.grab_set()
 
-
+#placer_tour
 class VuePrincipale(tk.Toplevel):
-    def __init__(self, parent, l_canvas=900, h_canvas=700):        
+    def __init__(self, parent, l_canvas=900, h_canvas=700,):        
         super().__init__(parent)
         self.title("Fenêtre de jeu")
         self.geometry(f"{l_canvas}x{h_canvas}")
@@ -40,7 +41,22 @@ class VuePrincipale(tk.Toplevel):
         self.hp_total = 100
         self.hp_actuel = 100
         self.argent = tk.IntVar()
+        #self.placer_tour = placer_tour
         self.argent.set(200)  # argent initial
+        self.grille =[['Depart', 'Foret', 'Foret', 'Riviere', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Foret', 'Foret', 'Pont', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Foret', 'Foret', 'Riviere', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Montagne', 'Riviere', 'Riviere', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Montagne', 'Riviere', 'Chemin', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Montagne', 'Riviere', 'Chemin', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Montagne', 'Riviere', 'Chemin', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Montagne', 'Riviere', 'Riviere', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Chemin', 'Chemin', 'Pont', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Chemin', 'Chemin', 'Riviere', 'Chemin', 'Chemin'], 
+                    ['Chemin', 'Chemin', 'Chemin', 'Riviere', 'Chemin', 'Arrivee']]
+        self.taille_case = 50
+        self.largeur = len(self.grille[0]) * self.taille_case
+        self.hauteur = len(self.grille) * self.taille_case
 
         self.creer_widgets()
 
@@ -68,8 +84,9 @@ class VuePrincipale(tk.Toplevel):
     
 
         # Canvas (zone de jeu)
-        self.canvas = tk.Canvas(frame_centre, width=700, height=500, bg="lightgray")
+        self.canvas = tk.Canvas(frame_centre, width= self.largeur, height=self.hauteur, bg="white")
         self.canvas.pack(side="left", padx=10, pady=10)
+        self.remplir_grille()
 
         # Boutique à droite
         boutique = tk.Frame(frame_centre, width=300)
@@ -107,14 +124,20 @@ class VuePrincipale(tk.Toplevel):
         bouton_fermer = tk.Button(frame_bas, text="Fermer", command=self.destroy)
         bouton_fermer.pack(side="right", padx=10)
 
+        # Lier le clic sur le canvas à la fonction de placement
+        self.canvas.bind("<Button-1>", self.placer_tourelle)
+
     def accepter_defense(self):
         choix = self.choix.get()
         self.aide.insert(tk.END, f"\nVous avez choisi : {choix}")
         self.aide.see(tk.END)
-        
+
         couts = {"Tour": 100, "Mitraillette": 50, "Mur": 10}
         cout = couts.get(choix, 0)
-        self.changer_argent(-cout)
+        if self.changer_argent(-cout):
+            self.mode_placement = True  # Activer le mode de placement
+            self.aide.insert(tk.END, "\nCliquez sur le canvas pour placer votre défense.")
+            self.aide.see(tk.END)
         
 
         
@@ -137,15 +160,76 @@ class VuePrincipale(tk.Toplevel):
             self.aide.see(tk.END)
             return
         self.argent.set(nouveau_montant)
+        return True  # Retourner True si l'argent a été changé avec succès
+    
+    def placer_tourelle(self, event):
+        if not self.mode_placement:
+            return  # Ne rien faire si on n'est pas en mode placement
 
+        # Calculer la position de la case cliquée
+        col = event.x // self.taille_case
+        row = event.y // self.taille_case
+        self.placer_tour((row, col), self.choix.get())  # Appeler la fonction de placement de tourelle
+        # Vérifier si la case est valide pour placer une tourelle
+        if self.grille[row][col] == 'Foret' or self.grille[row][col] == 'Riviere' or self.grille[row][col] == 'Montagne':
+            self.aide.insert(tk.END, "\nVous ne pouvez pas placer une tourelle ici.")
+            self.aide.see(tk.END)
+            return
+
+        # Placer la tourelle sur le canvas
+        x1 = col * self.taille_case
+        y1 = row * self.taille_case
+        x2 = x1 + self.taille_case
+        y2 = y1 + self.taille_case
+        if self.choix.get() == "Tour":
+            self.canvas.create_oval(x1, y1, x2, y2, fill="blue", outline="black")
+        elif self.choix.get() == "Mitraillette":
+            self.canvas.create_oval(x1, y1, x2, y2, fill="red", outline="black")
+        elif self.choix.get() == "Mur":
+            self.canvas.create_rectangle(x1, y1, x2, y2-25, fill="gray", outline="black")
+        self.aide.insert(tk.END, f"\nTourelle placée en ({row}, {col}).")
+        self.aide.see(tk.END)
+
+        # Désactiver le mode de placement
+        self.mode_placement = False
+
+    def remplir_grille(self):
+
+        # Dessin de la grille
+        for i in range(0, self.largeur, self.taille_case):
+            self.canvas.create_line(i, 0, i, self.hauteur, fill="black")
+        for j in range(0, self.hauteur, self.taille_case):
+            self.canvas.create_line(0, j, self.largeur, j, fill="black")
+
+        for row in range(len(self.grille)):
+            for col in range(len(self.grille[row])):
+                x1 = col * self.taille_case
+                y1 = row * self.taille_case
+                x2 = x1 + self.taille_case
+                y2 = y1 + self.taille_case
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill="beige", outline="")
+                if self.grille[row][col] == 'Montagne':
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="lightgrey", outline="")
+                elif self.grille[row][col] == 'Riviere':
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="blue", outline="")
+                elif self.grille[row][col] == 'Foret':
+                    self.canvas.create_oval(x1, y1, x2, y2, fill="dark green", outline="")
+                elif self.grille[row][col] == 'Pont':
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="brown", outline="")
+                elif self.grille[row][col] == 'Depart':
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="pink", outline="")
+                elif self.grille[row][col] == 'Arrivee':
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="red", outline="")
+
+        # Dessin de la grille
+        for i in range(0, self.largeur, self.taille_case):
+            self.canvas.create_line(i, 0, i, self.hauteur, fill="grey")
+        for j in range(0, self.hauteur, self.taille_case):
+            self.canvas.create_line(0, j, self.largeur, j, fill="grey")
 
 if __name__ == "__main__":
     app = VuePresentation()
     app.mainloop()
-
-        
-
-            
 
         
         
