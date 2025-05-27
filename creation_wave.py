@@ -24,9 +24,17 @@ def lecture_fichier_wave(fichier,feuille=None): #renvoie un dico qui pour chaque
                 valeur = str(row[i])
                 if valeur != '0':
                     if i == 0:
-                        ennemi_type = 'n'
+                        ennemi_type = 'paysan'
                     elif i == 1:
-                        ennemi_type = 'b'
+                        ennemi_type = 'bandit'
+                    elif i == 1:
+                        ennemi_type = 'archer'
+                    elif i == 1:
+                        ennemi_type = 'chevalier'
+                    elif i == 1:
+                        ennemi_type = 'catapulte'
+                    elif i == 1:
+                        ennemi_type = 'seigneur'
                     str_ennemi += ennemi_type
                 i += 1
             
