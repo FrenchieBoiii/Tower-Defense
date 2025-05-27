@@ -32,7 +32,7 @@ class Tour(Defense):
             if self.dans_portee(ennemi.coord):
                 cibles.append(ennemi)
         
-        cibles = sorted(cibles, key=lambda e: e.distance_parcourue)
+        #cibles = sorted(cibles, key=lambda e: e.distance_parcourue)
 
         
         nb_ennemi_a_tuer = min(self.nb_ennemis_touches, len(cibles))
@@ -46,43 +46,24 @@ class Tour(Defense):
         
         dans_portee = distance <= self.distance_tir
         return dans_portee
-    
-    """
-    #tri optimisé par chatgpt
-    def trier_par_distance(cibles):
-        cibles_tries = []
-    
-        for ennemi in cibles:
-            insere = False
-            nouvelle_liste = []
-    
-            for i in range(len(cibles_tries)):
-                if not insere and ennemi.distance_parcourue < cibles_tries[i].distance_parcourue:
-                    nouvelle_liste.append(ennemi)
-                    insere = True
-                nouvelle_liste.append(cibles_tries[i])
-    
-            if not insere:
-                nouvelle_liste.append(ennemi)
-    
-            cibles_tries = nouvelle_liste
-    
-        return cibles_tries
-    """
 
-class Mitraillette(Tour):
+class archer(Tour):
     def __init__(self, position):
-        super().__init__(position, prix=50, cadence=0.5, degats=30, distance_tir=2, nb_ennemis_touches=2)
+        super().__init__(position, prix=25, cadence=0.7, degats=15, distance_tir=3, nb_ennemis_touches=1)
 
 
-class Mortier(Tour):
+class mage(Tour):
     def __init__(self, position):
-        super().__init__(position, prix=80, cadence=1.5, degats=15, distance_tir=4, nb_ennemis_touches=5)
+        super().__init__(position, prix=50, cadence=1, degats=30, distance_tir=4, nb_ennemis_touches=2)
 
 
-class Archer(Tour):
+class baliste(Tour):
     def __init__(self, position):
-        super().__init__(position, prix=60, cadence=1.2, degats=8, distance_tir=5, nb_ennemis_touches=1)
+        super().__init__(position, prix=75, cadence=2.5, degats=60, distance_tir=5, nb_ennemis_touches=3)
+
+class feu(Tour):
+    def __init__(self, position):
+        super().__init__(position, prix=60, cadence=1, degats=30, distance_tir=3, nb_ennemis_touches=2)
 
 
 class Mur(Defense):
