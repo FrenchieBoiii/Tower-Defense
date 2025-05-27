@@ -1,6 +1,6 @@
 import tkinter as tk 
 from PIL import Image, ImageTk
-from tkinter import scrolledtext
+from tkinter import scrolledtext,Canvas,PhotoImage
 
 from Controleur import Controleur
 
@@ -44,10 +44,11 @@ class VuePrincipale(tk.Toplevel):
         self.grille = self.controleur.get_grille()
 
         
-        self.taille_case = 50
+        self.taille_case = 16
         self.largeur = len(self.grille[0]) * self.taille_case
         self.hauteur = len(self.grille) * self.taille_case
         self.creer_widgets()
+        self.load_all_sprites("images/tileset.png", 7, 52)
         self.mode_placement = False
 
 
@@ -60,7 +61,7 @@ class VuePrincipale(tk.Toplevel):
         frame_haut = tk.Frame(frame_global)
         frame_haut.pack(side="top", fill="x", pady=5)
         
-        self.label_defenses = tk.Label(frame_haut, text="Défenses : Tour, Mitraillette, Mur", font=("Arial", 12))
+        self.label_defenses = tk.Label(frame_haut, text="Défenses : Tour d'archer, Tour de mage, Tour de baliste, Tour de feu, Muraille", font=("Arial", 12))
         self.label_defenses.pack(side="left", padx=10)
         
         frame_argent = tk.LabelFrame(frame_haut, text="Argent :", font=("Arial", 12, "bold"), fg="green")
@@ -88,11 +89,15 @@ class VuePrincipale(tk.Toplevel):
         label_boutique = tk.Label(boutique, text="Boutique", font=('Helvetica', 14, 'bold'))
         label_boutique.pack(pady=5)
 
-        self.choix = tk.StringVar(value="Tour")
+        self.choix = tk.StringVar(value="Tour d'archer")
 
-        tk.Radiobutton(boutique, text="Tour : 100€", variable=self.choix, value="Tour").pack(anchor="w")
-        tk.Radiobutton(boutique, text="Mitraillette : 50€", variable=self.choix, value="Mitraillette").pack(anchor="w")
-        tk.Radiobutton(boutique, text="Mur : 10€", variable=self.choix, value="Mur").pack(anchor="w")
+
+        tk.Radiobutton(boutique, text="Tour d'archer : 25 or", variable=self.choix, value="archer").pack(anchor="w")
+        tk.Radiobutton(boutique, text="Tour de mage : 50 or", variable=self.choix, value="mage").pack(anchor="w")
+        tk.Radiobutton(boutique, text="Tour de baliste : 75 or", variable=self.choix, value="baliste").pack(anchor="w")
+        tk.Radiobutton(boutique, text="Tour de feu : 20 or", variable=self.choix, value="feu").pack(anchor="w")
+        tk.Radiobutton(boutique, text="Muraille : 10 or", variable=self.choix, value="muraille").pack(anchor="w")
+
 
         bouton_accepter = tk.Button(boutique, text="Accepter", command=self.accepter_defense)
         bouton_accepter.pack(pady=10)
@@ -124,6 +129,17 @@ class VuePrincipale(tk.Toplevel):
         bouton_fermer = tk.Button(frame_bas, text="Fermer", command=self.destroy)
         bouton_fermer.pack(side="right", padx=10)
     
+    
+    def load_all_sprites(self,tileset_path, cols, rows, tile_size=16):
+        tileset = Image.open(tileset_path)
+        self.sprites = {}
+        for y in range(rows):
+            for x in range(cols):
+                box = (x * tile_size, y * tile_size,(x + 1) * tile_size, (y + 1) * tile_size)
+                sprite_img = tileset.crop(box)
+                key = f"{x}_{y}"
+                self.sprites[key] = ImageTk.PhotoImage(sprite_img)
+
     def accepter_defense(self):
         self.mode_placement = True
 
@@ -131,22 +147,20 @@ class VuePrincipale(tk.Toplevel):
         self.aide.see(tk.END)
         
     def placer_defense(self, event):
-        if not self.mode_placement:
-            return  # Ne rien faire si on n'est pas en mode placement
-
-        # Calculer la position de la case cliquée
-        col = event.x // self.taille_case
-        row = event.y // self.taille_case
-        type_def = self.choix.get()
-        
-        reussi, message = self.controleur.placer_defense(row, col, type_def)
-        self.aide.insert(tk.END, f"\n{message}")
-        self.aide.see(tk.END)
-        
-        if reussi:
-            self.dessiner_defense(row, col, type_def)
-            self.label_argent.config(text=str(self.controleur.get_argent()))
-            self.mode_placement = False
+        if self.mode_placement:
+            # Calculer la position de la case cliquée
+            col = event.x // self.taille_case
+            row = event.y // self.taille_case
+            type_def = self.choix.get()
+            
+            reussi, message = self.controleur.placer_defense(row, col, type_def)
+            self.aide.insert(tk.END, f"\n{message}")
+            self.aide.see(tk.END)
+            
+            if reussi:
+                self.dessiner_defense(row, col, type_def)
+                self.label_argent.config(text=str(self.controleur.get_argent()))
+                self.mode_placement = False
         
     def dessiner_defense(self, row, col, type_def):
         x1 = col * self.taille_case
@@ -154,11 +168,15 @@ class VuePrincipale(tk.Toplevel):
         x2 = x1 + self.taille_case
         y2 = y1 + self.taille_case
 
-        if type_def == "Tour":
-            self.canvas.create_oval(x1, y1, x2, y2, fill="blue", outline="black")
+        if type_def == "archer":
+            print("coucou")
+            archer = self.sprites["2_4"]
+            self.canvas.create_image(row*self.taille_case, col*self.taille_case, image=archer, anchor='nw')
+            self.canvas.archer = archer
+            #self.canvas.create_oval(x1, y1, x2, y2, fill="blue", outline="black")
         elif type_def == "Mitraillette":
             self.canvas.create_oval(x1, y1, x2, y2, fill="red", outline="black")
-        elif type_def == "Mur":
+        elif type_def == "muraille":
             self.canvas.create_rectangle(x1, y1, x2, y2-25, fill="gray", outline="black")
 
     def dessiner_ennemis(self):
@@ -177,7 +195,7 @@ class VuePrincipale(tk.Toplevel):
         encore = self.controleur.prochain_tic()
         self.dessiner_ennemis()
         self.maj_barre_vie()
-    
+        self.label_argent.config(text=str(self.controleur.get_argent()))
         if encore:
             self.after(500, self.lancer_tic)
             
