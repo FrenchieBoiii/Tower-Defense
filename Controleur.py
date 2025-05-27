@@ -19,7 +19,7 @@ class Controleur:
         self.ennemis = []
         self.defenses = []
         self.vie = 100
-        self.argent = 200
+        self.argent = 100
         self.tic = 0
         
         self.numero_wave = 1
@@ -52,29 +52,33 @@ class Controleur:
         
 
     def placer_defense(self, row, col, type_def):
-        if not self.peut_placer(row, col):
-            return False, "Terrain invalide pour une défense."
-
-        couts = {"Tour": 100, "Mitraillette": 50, "Mur": 10}
-        cout = couts.get(type_def, 0)
-        if self.argent < cout:
-            return False, "Pas assez d'argent."
-
-        self.argent -= cout
-        self.grille[row][col] = "Mur"
-        
-        if type_def == "Tour":
-            nouvelle_defense = tower.Archer(position=(row, col)) 
-        elif type_def == "Mitraillette":
-            nouvelle_defense = tower.Mitraillette(position=(row, col))
-        elif type_def == "Mortier":
-            nouvelle_defense = tower.Mortier(position=(row, col))
-        elif type_def == "Mur":
-            nouvelle_defense = tower.Mur(position=(row, col))
-
+        peut_placer = True
+        reponse = f"{type_def} placée en ({row}, {col})."
+        if self.peut_placer(row, col):
+            if type_def == "archer":
+                nouvelle_defense = tower.archer(position=(row, col)) 
+            elif type_def == "mage":
+                nouvelle_defense = tower.mage(position=(row, col))
+            elif type_def == "baliste":
+                nouvelle_defense = tower.baliste(position=(row, col))
+            elif type_def == "feu":
+                nouvelle_defense = tower.feu(position=(row, col))
+            elif type_def == "muraille":
+                nouvelle_defense = tower.muraille(position=(row, col))
             
-        self.defenses.append(nouvelle_defense)
-        return True, f"{type_def} placée en ({row}, {col})."
+            if nouvelle_defense.prix > self.argent:
+                peut_placer = False
+                reponse = "Pas assez d'argent."
+            else:
+                self.argent -= nouvelle_defense.prix
+                self.grille[row][col] = "Mur"
+                self.defenses.append(nouvelle_defense)
+                
+        else:
+            peut_placer = False
+            reponse = "Terrain invalide pour une défense."
+            
+        return peut_placer, reponse
 
 
     def spawn_ennemi(self, type_ennemi):
@@ -127,9 +131,13 @@ class Controleur:
             if ennemi.arrivee:
                 self.diminuer_vie(ennemi.degats)  
                 ennemi.vivant = False
+                self.ennemis.remove(ennemi)
+            elif not ennemi.vivant:
+                self.argent += ennemi.recompense
+                self.ennemis.remove(ennemi)
         for defense in self.defenses:
             defense.update(self.ennemis, dt)
-        self.ennemis = [e for e in self.ennemis if e.vivant and not e.arrivee]
+        #self.ennemis = [e for e in self.ennemis if e.vivant and not e.arrivee]
 
     def diminuer_vie(self, quantite):
         self.vie = max(0, self.vie - quantite)
