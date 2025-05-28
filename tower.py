@@ -1,4 +1,3 @@
-
 import algo
 import math
 
@@ -19,6 +18,13 @@ class Tour(Defense):
         self.timer = 0
 
     def update(self, ennemis, dt):
+        """
+        Fonction qui tir en fonction du temps écoulé
+        
+        Entrées :
+            ennemis : liste d'objets ennemi qui prennent des tirs
+            dt : temps qui s'est écoulé depuis le dernier appel de la fonction update
+        """
         self.timer += dt
         intervalle_tir = 1 / self.cadence
         while self.timer >= intervalle_tir:
@@ -71,6 +77,9 @@ class Mur(Defense):
         super().__init__(position, prix=10)
     def update(self, ennemis, dt):
         pass
+        
+        
+        
         
         
         
