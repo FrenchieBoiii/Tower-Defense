@@ -95,7 +95,7 @@ class VuePrincipale(tk.Toplevel):
         tk.Radiobutton(boutique, text="Tour d'archer : 25 or", variable=self.choix, value="archer").pack(anchor="w")
         tk.Radiobutton(boutique, text="Tour de mage : 50 or", variable=self.choix, value="mage").pack(anchor="w")
         tk.Radiobutton(boutique, text="Tour de baliste : 75 or", variable=self.choix, value="baliste").pack(anchor="w")
-        tk.Radiobutton(boutique, text="Tour de feu : 20 or", variable=self.choix, value="feu").pack(anchor="w")
+        tk.Radiobutton(boutique, text="Tour de feu : 60 or", variable=self.choix, value="feu").pack(anchor="w")
         tk.Radiobutton(boutique, text="Muraille : 10 or", variable=self.choix, value="muraille").pack(anchor="w")
 
 
@@ -198,6 +198,9 @@ class VuePrincipale(tk.Toplevel):
         self.label_argent.config(text=str(self.controleur.get_argent()))
         if encore:
             self.after(500, self.lancer_tic)
+        else :
+            self.aide.insert(tk.END, f"\n C'est la fin de la wave vous pouvez replacer des défenses")
+            
             
             
     def lancer_wave(self):
