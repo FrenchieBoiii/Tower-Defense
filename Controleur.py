@@ -8,7 +8,7 @@ import creation_wave
 class Controleur:
     def __init__(self):
         self.niveaux = Niveaux("Map.xlsx")
-        self.mapp = self.niveaux.dico_mapps[3]  # une seule map
+        self.mapp = self.niveaux.dico_mapps[1]  # une seule map
         self.grille = self.mapp.mapp
         self.wave_data = creation_wave.lecture_fichier_wave("Wave.xlsx")
 
@@ -53,7 +53,7 @@ class Controleur:
 
     def placer_defense(self, row, col, type_def):
         peut_placer = True
-        reponse = f"{type_def} placée en ({row}, {col})."
+        reponse = f"{type_def} placée en ({row}, {col}). Placez une nouvelle défense ou lancer la wave."
         if self.peut_placer(row, col):
             if type_def == "archer":
                 nouvelle_defense = tower.archer(position=(row, col)) 
@@ -76,7 +76,7 @@ class Controleur:
                 
         else:
             peut_placer = False
-            reponse = "Terrain invalide pour une défense."
+            reponse = "Terrain invalide pour une défense.Placez la défense à un autre endroit."
             
         return peut_placer, reponse
 
@@ -85,7 +85,8 @@ class Controleur:
         ennemi = Ennemi(type_ennemi)
         ennemi.coord = self.depart 
         ennemi.deplacement = self.chemin_ennemis[1:]
-        self.ennemis.append(ennemi)
+        if len(type_ennemi) >1:
+            self.ennemis.append(ennemi)
         
         
     def demarrer_wave(self):
@@ -152,29 +153,3 @@ class Controleur:
 
     def fin_de_partie(self):
         print("Vous n'avez plus de vie. Vous avez perdu.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
