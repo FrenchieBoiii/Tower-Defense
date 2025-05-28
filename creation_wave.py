@@ -27,13 +27,13 @@ def lecture_fichier_wave(fichier,feuille=None): #renvoie un dico qui pour chaque
                         ennemi_type = 'paysan'
                     elif i == 1:
                         ennemi_type = 'bandit'
-                    elif i == 1:
+                    elif i == 2:
                         ennemi_type = 'archer'
-                    elif i == 1:
+                    elif i == 3:
                         ennemi_type = 'chevalier'
-                    elif i == 1:
+                    elif i == 4:
                         ennemi_type = 'catapulte'
-                    elif i == 1:
+                    elif i == 5:
                         ennemi_type = 'seigneur'
                     str_ennemi += ennemi_type
                 i += 1
