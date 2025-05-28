@@ -69,7 +69,8 @@ class feu(Tour):
 class Mur(Defense):
     def __init__(self, position):
         super().__init__(position, prix=10)
-        
+    def update(self, ennemis, dt):
+        pass
         
         
         
