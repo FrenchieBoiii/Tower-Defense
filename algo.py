@@ -5,10 +5,23 @@ DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 # Function to calculate the Manhattan distance
 def manhattan_distance(start, end):
+    """
+    fonction qui définie la distance Manhattan, distance entre 2 points avec des déplacment horizontaux et verticaux
+        Entree: start, coordonnée point de départ, liste
+        Sortie: distance Manhattan, int
+    """    
     return abs(start[0] - end[0]) + abs(start[1] - end[1])
 
 # A* algorithm for pathfinding
 def a_star(grid, start, goal):
+    """
+    fonction qui trouve le chemin le plus court entre deux points sur une grille en utilisant l'algorithme A*'
+        Entrées:grid, grid
+                start, coordonées du point de départ
+                goal, coordonées du point d'arrivé
+        Sortie: chemin le plus court,  Liste des coordonnées représentant le chemin trouvé du point de départ au point d'arrivée, liste 2D
+     
+    """  
     rows, cols = len(grid), len(grid[0])
     
     # Cost from start to the current node
@@ -71,7 +84,18 @@ def a_star(grid, start, goal):
 
 
 def str_vers_int(grille):
+    """
+    Fonction qui converti une grille de chaînes de caractères en une grille d'entiers.
 
+    Les cellules contenant les chaînes "Chemin", "Pont", "Depart" ou "Arrivee" sont converties en 1.
+    Les autres cellules sont converties en float('inf').
+
+    Entrée :
+        grille : liste 2D
+    
+    Sortie : 
+        grille : liste 2D
+    """
     grille_int = []
     for row in grille:
         row_int = []
@@ -86,11 +110,28 @@ def str_vers_int(grille):
     
     
 def trouver_chemin(grille,depart,arrivee):
+    """
+    Trouve un chemin entre deux points sur une grille en utilisant l'algorithme a_star.
+    
+    Entrées :
+        grille : liste 2D
+        depart : Coordonnées du point de départ sous forme (ligne, colonne).
+        arrivee : Coordonnées du point d'arrivée sous forme (ligne, colonne).
+    """
     nouvelle_grille = str_vers_int(grille)
     return a_star(nouvelle_grille, depart, arrivee)
     
     
 def chemin_bloque(grid_a_tester, start, goal):
+    """
+    Vérifie si le chemin entre deux points est bloqué dans une grille. Utilise la fonction trouver_chemin
+    
+    Entrées :
+        grille_a_tester : liste 2D
+        start : Coordonnées du point de départ sous forme (ligne, colonne).
+        goal : Coordonnées du point d'arrivée sous forme (ligne, colonne).
+
+    """
     
     bloque = True
     
@@ -99,23 +140,6 @@ def chemin_bloque(grid_a_tester, start, goal):
     if path != []:
         bloque = False
     return bloque
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
