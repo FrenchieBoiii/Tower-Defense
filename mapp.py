@@ -10,6 +10,17 @@ class Mapp():
         
     
     def lecture_fichier_color(self,fichier,feuille):
+        """
+        Fonction qui créer la map en couleur à partir de l'excel et de la feuille choisie
+        Interprètation des cellules de la feuille excel 
+        
+        Entrées :
+            Fichier : str, chemin vers le fichier excel
+            feuille : str, numéro de la feuille du fichier excel correspondant à la map voulue
+        Sortie :
+            color_matrix : liste 2D, matrice représentant la map utilisée pour le jeu
+        """
+        
         # Ouvrir le fichier Excel
         wb = openpyxl.load_workbook(fichier)
         sheet = wb[feuille]
@@ -63,6 +74,16 @@ class Mapp():
                 color_matrix.append(color_row)
 
     def trouver_coord(self, type_terrain):
+        """
+        Fonction qui cherhce coordonnées de la dernière occurence d'un type de terrain voulue sur la map
+        
+        Entrée :
+            Type_terrain  : str, nom du terrain qu'on recherche
+        Sortie : 
+            coord : tuple, coordonée de la dernière cellule du terrain voule qui a été trouvé
+
+        """
+
         coord = (0,0)
         for row_index, row in enumerate(self.mapp):
             for col_index, cell in enumerate(row):
