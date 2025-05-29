@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May  7 14:35:05 2025
-
-@author: jerem
-"""
-
 class Ennemi():
     
     def __init__(self,type_ennemi):
@@ -45,11 +38,18 @@ class Ennemi():
 
             
     def damage(self,nb):
+        """
+        fonction qui enlève à chaque ennemie les points de dégat et met à jour la variable vivant de l'ennemi'
+            Entrees: nb, nombre de dégats, int
+        """    
         self.hp -= nb
         if self.hp < 0 :
             self.vivant = False
 
     def update(self):
+        """
+        fonction qui déplace les ennemies sur la map et met à jour leurs positions 
+        """  
         if self.hp <= 0:
             self.vivant = False
             
