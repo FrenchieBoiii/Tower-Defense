@@ -3,10 +3,14 @@ import openpyxl
 
 def lecture_fichier_wave(fichier,feuille=None): 
     """
-    Fonction qui renvoie un dico qui pour chaque wave sous forme de numéro lui associe une liste qui représente chaque tic de la manche
+    Fonction qui renvoie un dico qui représente les waves sous forme de numéro lui associe une liste qui représente chaque tic de la manche
 
-    Entrée :
-        fichier  : ?
+    Chaque lignes après une ligne "wave X" contient un type d'ennemi à faire apparaître, l'ensemble des lignes constitue uen wave
+    Entrées :
+        fichier  : str, chemin vers le fichier Excel contenant les waves
+        feuille : str, numéro de la feuille si plusieurs feuilles dans le fichier excel
+    Sortie :
+        wave_ennemi_dico, liste 2D, clé numéro d'une wave et valeur liste de chaine qui représentent les types d'ennemies
 
     """
     
