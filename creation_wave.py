@@ -1,7 +1,14 @@
 import openpyxl
 
 
-def lecture_fichier_wave(fichier,feuille=None): #renvoie un dico qui pour chaque wave sous forme de numéro lui associe une liste qui représente chaque tic de la manche
+def lecture_fichier_wave(fichier,feuille=None): 
+    """
+    Fonction qui renvoie un dico qui pour chaque wave sous forme de numéro lui associe une liste qui représente chaque tic de la manche
+
+    Entrée :
+        fichier  : ?
+
+    """
     
     wb = openpyxl.load_workbook(fichier)
     
