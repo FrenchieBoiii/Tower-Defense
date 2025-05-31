@@ -1,18 +1,15 @@
 import openpyxl
 from mapp import Mapp
 
-class Niveaux(): #classe qui a partir d'un tableau excel va générer des maps
+class Niveaux():
     def __init__(self,fichier_map):
-        
         self.fichier_map =  fichier_map
-        self.dico_mapps = self.création_des_mapps() #création du dico qui associe pour des numéros une map
-        
+        self.dico_mapps = self.création_des_mapps()
         
     def création_des_mapps(self): 
         """
-        Fonction qui creéer un dictionnaire avec en cléle numéro de wave et en valeur une map qui correspnd à une feuille du fichier excel.
-    
-        sorties : 
+        Fonction qui créer un dictionnaire avec en clé le numéro de wave et en valeur une map qui correspnd à une feuille du fichier excel.
+        Sorties : 
             dico : dictionnaire associant un numéro de wave avec une map
         """
         wb = openpyxl.load_workbook(self.fichier_map)
@@ -22,15 +19,6 @@ class Niveaux(): #classe qui a partir d'un tableau excel va générer des maps
             i += 1
             dico[i] = Mapp(self.fichier_map,sheet_name)                
         return dico
-    
-    def affichage_niveau_test(self,nb): 
-        """
-        Fonction qui affiche la carte associée à un niveau demandé
-        
-        Entrée :
-            nb : entier, numéro de wave
-        """
-        return self.dico_mapps[nb].affichage_map()
     
     def niveau(self,nb): 
         """
