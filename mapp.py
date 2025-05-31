@@ -15,30 +15,23 @@ class Mapp():
         Interprètation des cellules de la feuille excel 
         
         Entrées :
-            Fichier : str, chemin vers le fichier excel
-            feuille : str, numéro de la feuille du fichier excel correspondant à la map voulue
-        Sortie :
+            Fichier : string du chemin vers le fichier excel
+            feuille : string du numéro de la feuille du fichier excel correspondant à la map voulue
+        Sorties :
             color_matrix : liste 2D, matrice représentant la map utilisée pour le jeu
         """
-        
-        # Ouvrir le fichier Excel
         wb = openpyxl.load_workbook(fichier)
         sheet = wb[feuille]
         
         color_matrix = []
         
-        # Parcourir les cellules
         for row in sheet.iter_rows():
             color_row = []
             i = 0
-            #print(row)
             fill0 = row[0].fill
-            
             if fill0.fgColor.rgb == 'FFC00000':
-                        
                 wb.close()
                 return color_matrix
-            
             else:
                 while i != len(row):
                     cell = row[i]
@@ -47,7 +40,7 @@ class Mapp():
                     couleur = fill.fgColor.rgb
                     if couleur == 'FFFFFFFF' or couleur == '00000000':
                         color_row.append('Chemin')
-                    
+            
                     elif couleur == 'FFC00000':
                         i = len(row)  
                     
@@ -75,18 +68,20 @@ class Mapp():
 
     def trouver_coord(self, type_terrain):
         """
-        Fonction qui cherhce coordonnées de la dernière occurence d'un type de terrain voulue sur la map
+        Fonction qui cherche les coordonnées de la dernière occurence d'un type de terrain voulue sur la map
         
         Entrée :
-            Type_terrain  : str, nom du terrain qu'on recherche
+            Type_terrain  : string du nom du terrain qu'on recherche
         Sortie : 
-            coord : tuple, coordonée de la dernière cellule du terrain voule qui a été trouvé
-
+            coord : tuple indiquant les coordonées de la dernière cellule du terrain voule qui a été trouvé
         """
-
-        coord = (0,0)
-        for row_index, row in enumerate(self.mapp):
-            for col_index, cell in enumerate(row):
+        coord = (0, 0)
+        row_index = 0
+        for row in self.mapp:
+            col_index = 0
+            for cell in row:
                 if cell == type_terrain:
                     coord = (row_index, col_index)
+                col_index += 1
+            row_index += 1
         return coord
