@@ -27,6 +27,8 @@ class Controleur:
         self.player_ready = False
         
         self.dernier_temps = time.time()
+
+        self.multiplier_hp = 1
         
 
     def peut_placer(self, row, col):
@@ -81,6 +83,9 @@ class Controleur:
             if nouvelle_defense.prix > self.argent:
                 peut_placer = False
                 reponse = "Pas assez d'argent."
+            elif self.wave_en_cours:
+                peut_placer = False
+                reponse = "Impossible de placer une défense pendant une vague en cours."
             else:
                 self.argent -= nouvelle_defense.prix
                 self.grille[row][col] = "Mur"
@@ -100,7 +105,7 @@ class Controleur:
         Entrée :
             type_ennemi : string représentant le type de l'ennemi
         """
-        ennemi = Ennemi(type_ennemi)
+        ennemi = Ennemi(type_ennemi, self.multiplier_hp)
         ennemi.coord = self.depart 
         ennemi.deplacement = self.chemin_ennemis[1:]
         if len(type_ennemi) >1:
@@ -112,6 +117,7 @@ class Controleur:
         et réinitialisant le compteur de tic.
         """
         self.wave_en_cours = True
+        self.multiplier_hp = 1.1 ** (self.numero_wave - 1)
         self.tic = 0
         self.chemin_ennemis = algo.trouver_chemin(self.grille, self.mapp.depart, self.mapp.arrivee)
         

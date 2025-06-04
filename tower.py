@@ -65,12 +65,12 @@ class Tour(Defense):
 
 class archer(Tour):
     def __init__(self, position):
-        super().__init__(position, prix=25, cadence=1, degats=10, distance_tir=3, nb_ennemis_touches=1)
+        super().__init__(position, prix=20, cadence=1, degats=10, distance_tir=3, nb_ennemis_touches=1)
 
 
 class mage(Tour):
     def __init__(self, position):
-        super().__init__(position, prix=50, cadence=1.5, degats=25, distance_tir=4, nb_ennemis_touches=1)
+        super().__init__(position, prix=40, cadence=1.5, degats=25, distance_tir=4, nb_ennemis_touches=1)
 
 
 class baliste(Tour):

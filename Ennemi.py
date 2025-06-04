@@ -1,7 +1,7 @@
 
 class Ennemi():
     
-    def __init__(self,type_ennemi):
+    def __init__(self,type_ennemi, multiplier_hp):
         
         self.vivant = True
         self.arrivee = False
@@ -12,28 +12,28 @@ class Ennemi():
         
         
         if type_ennemi == 'paysan' :
-            self.hp = 40
+            self.hp = 40*multiplier_hp
             self.degats = 1
             self.recompense = 3
         
         elif type_ennemi == 'bandit' :
-            self.hp = 70
+            self.hp = 70*multiplier_hp
             self.degats = 2
             self.recompense = 6
         elif type_ennemi == 'archer' :
-            self.hp = 50
+            self.hp = 50*multiplier_hp
             self.degats = 4
             self.recompense = 8
         elif type_ennemi == 'chevalier' :
-            self.hp = 150
+            self.hp = 150*multiplier_hp
             self.degats = 6
             self.recompense = 10
         elif type_ennemi == 'catapulte' :
-            self.hp = 120
+            self.hp = 120*  multiplier_hp
             self.degats = 12
             self.recompense = 15
         elif type_ennemi == 'seigneur' :
-            self.hp = 500
+            self.hp = 500*  multiplier_hp
             self.degats = 40
             self.recompense = 50
 

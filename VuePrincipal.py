@@ -121,8 +121,8 @@ class VuePrincipale(tk.Toplevel):
     
         self.choix = tk.StringVar(value="archer")
         
-        tk.Radiobutton(boutique, text="Tour d'archer : 25 or", variable=self.choix, value="archer",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
-        tk.Radiobutton(boutique, text="Tour de mage : 50 or", variable=self.choix, value="mage",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
+        tk.Radiobutton(boutique, text="Tour d'archer : 20 or", variable=self.choix, value="archer",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
+        tk.Radiobutton(boutique, text="Tour de mage : 40 or", variable=self.choix, value="mage",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
         tk.Radiobutton(boutique, text="Tour de baliste : 80 or", variable=self.choix, value="baliste",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
         tk.Radiobutton(boutique, text="Tour de feu : 60 or", variable=self.choix, value="feu",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
         tk.Radiobutton(boutique, text="Muraille : 10 or", variable=self.choix, value="muraille",bg="#e0c097", anchor="w").pack(fill="x", padx=10)
@@ -181,8 +181,15 @@ class VuePrincipale(tk.Toplevel):
         Active le mode de placement d'une défense sélectionnée par l'utilisateur
         et affiche un message dans le champ d'aide.
         """
+        stat_defense = {"archer": "1 tir toutes les 1 secondes, 10 dégâts, 1 ennemi touché, portée 3",
+                        "mage": "1 tir toutes les 1.5 secondes, 25 dégâts, 1 ennemi touché, portée 4",
+                        "baliste": "1 tir toutes les 3.5 secondes, 40 dégâts, 2 ennemis touchés, portée 4",
+                        "feu": "1 tir toutes les 1.5 secondes, 30 dégâts, 2 ennemis touchés, portée 3",
+                        "muraille": "Bloque le passage des ennemis"}
         self.mode_placement = True
         self.aide.insert(tk.END, f"\n\nVous avez choisi : {self.choix.get()}\nCliquez sur le canvas pour placer.")
+        self.aide.insert(tk.END, f"\n\nStatistiques de la défense : {stat_defense[self.choix.get()]}")
+
         self.aide.see(tk.END)
         
     def placer_defense(self, event):
@@ -309,9 +316,13 @@ class VuePrincipale(tk.Toplevel):
         Démarre une nouvelle vague d'ennemis et met à jour l'affichage du numéro
         de vague. Lance les tics de jeu.
         """
-        self.controleur.demarrer_wave()
-        self.label_wave.config(text=f"Wave {self.controleur.numero_wave}")
-        self.lancer_tic()
+        if not self.controleur.wave_en_cours:
+            self.controleur.demarrer_wave()
+            self.label_wave.config(text=f"Wave {self.controleur.numero_wave}")
+            self.lancer_tic()
+        else:
+            self.aide.insert(tk.END, "\n\nUne vague est déjà en cours ! Attendez qu'elle se termine.")
+            self.aide.see(tk.END)
 
     def maj_barre_vie(self):
         """
