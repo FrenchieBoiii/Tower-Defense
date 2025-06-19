@@ -155,10 +155,13 @@ class VuePrincipale(tk.Toplevel):
     
         bouton_fermer = tk.Button(frame_bas, text="Fermer", command=self.destroy, **bouton_style)
         bouton_fermer.pack(side="right", padx=10)
+
     
     def load_all_sprites(self, tileset_path, cols, rows, tile_size, prefix=""):
         """
         Charge un tileset découpé en sprites individuels stockés dans un dictionnaire.
+
+        UTILISATION DE L'IA
 
         Entrées :
             tileset_path: string du chemin vers l'image du tileset
@@ -218,6 +221,8 @@ class VuePrincipale(tk.Toplevel):
         """
         Affiche le sprite correspondant à la défense choisie à la position spécifiée.
 
+        UTILISATION DE L'IA
+
         Entrées :
             row: entier indiquant la ligne de la grille
             col: entier indiquant la colonne de la grille
@@ -248,6 +253,8 @@ class VuePrincipale(tk.Toplevel):
         """
         Affiche tous les ennemis actifs sur le canvas en fonction de leur position
         et de leur type.
+
+        UTILISATION DE L'IA
         """
         self.canvas.delete("ennemi")
         self.tiles_occupees = []
@@ -279,6 +286,8 @@ class VuePrincipale(tk.Toplevel):
         """
         Dessine des taches de sang sur le canvas aux emplacements où des ennemis
         ont été éliminés, sauf si une autre entité y est présente.
+
+        UTILISATION DE L'IA
         """
         for coord in self.controleur.sang:
             if coord not in self.tiles_occupees:
@@ -331,14 +340,21 @@ class VuePrincipale(tk.Toplevel):
         """
         self.barre_vie.delete("all")
         vie = self.controleur.vie
-        largeur = int((vie / 100) * 200)
-        couleur = "green" if vie > 50 else "orange" if vie > 20 else "red"
+        largeur = int((vie / 100) * 200) 
+        if vie > 50:
+            couleur = "green"
+        elif vie > 20:
+            couleur = "orange"
+        else:
+            couleur = "red"
         self.barre_vie.create_rectangle(0, 0, largeur, 20, fill=couleur)
 
     def remplir_grille(self):
         """
         Dessine la carte du jeu en parcourant la grille et en plaçant les éléments
         graphiques correspondant au type de terrain (herbe, forêt, rivière, etc.).
+
+        UTILISATION DE L'IA
         """
         self.herbe_images = []
         self.montagnes_images = []
