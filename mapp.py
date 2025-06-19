@@ -20,7 +20,7 @@ class Mapp():
         Sorties :
             color_matrix : liste 2D, matrice représentant la map utilisée pour le jeu
         """
-        wb = openpyxl.load_workbook(fichier)
+        wb = openpyxl.load_workbook(fichier) #Avec Chat GPT
         sheet = wb[feuille]
         
         color_matrix = []
@@ -29,7 +29,7 @@ class Mapp():
             color_row = []
             i = 0
             fill0 = row[0].fill
-            if fill0.fgColor.rgb == 'FFC00000':
+            if fill0.fgColor.rgb == 'FFC00000': #Fin de Chat GPT
                 wb.close()
                 return color_matrix
             else:
@@ -37,7 +37,7 @@ class Mapp():
                     cell = row[i]
                     i +=1
                     fill = cell.fill
-                    couleur = fill.fgColor.rgb
+                    couleur = fill.fgColor.rgb 
                     if couleur == 'FFFFFFFF' or couleur == '00000000':
                         color_row.append('Chemin')
             
